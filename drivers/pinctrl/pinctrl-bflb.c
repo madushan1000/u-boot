@@ -139,7 +139,7 @@ static const char *bflb_pinctrl_get_function_name(struct udevice *dev,
 {
 	const struct bflb_pinctrl_plat *plat = dev_get_plat(dev);
 
-	return plat->desc->functions[func_selector];
+	return plat->desc->functions[func_selector] ?: "";
 }
 
 static int bflb_pinctrl_pinmux_set(struct udevice *dev, uint pin_selector,
