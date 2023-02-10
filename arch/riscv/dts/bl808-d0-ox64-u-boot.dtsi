@@ -17,10 +17,14 @@
 	u-boot,dm-pre-reloc;
 };
 
+&mm_glb_clk {
+	u-boot,dm-pre-reloc;
+};
+
 &pds_clk {
 	u-boot,dm-pre-reloc;
 };
 
-&uart1_pins {
+&uart3_pins {
 	u-boot,dm-pre-reloc;
 };

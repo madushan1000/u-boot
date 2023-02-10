@@ -9,11 +9,11 @@
 	model = "Pine64 Ox64 (D0)";
 
 	aliases {
-		serial1 = &uart1;
+		serial3 = &uart3;
 	};
 
 	chosen {
-		stdout-path = "serial1:115200n8";
+		stdout-path = "serial3:115200n8";
 	};
 };
 
@@ -22,14 +22,14 @@
 };
 
 &gpio {
-	uart1_pins: uart1-pins {
+	uart3_pins: uart3-pins {
 		pins = "GPIO16", "GPIO17";
-		function = "uart";
+		function = "mm_uart";
 	};
 };
 
-&uart1 {
-	pinctrl-0 = <&uart1_pins>;
+&uart3 {
+	pinctrl-0 = <&uart3_pins>;
 	pinctrl-names = "default";
 	status = "okay";
 };

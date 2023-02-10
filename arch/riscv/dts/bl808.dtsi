@@ -135,7 +135,7 @@
 		uart2: serial@2000aa00 {
 			compatible = "bflb,bl808-uart";
 			reg = <0x2000aa00 0x100>;
-			clocks = <&hbn_clk CLK_HBN_UART>;
+			clocks = <&glb_clk CLK_UART>;
 		};
 
 		i2s: i2s@2000ab00 {
@@ -268,6 +268,7 @@
 			compatible = "bflb,bl808-uart";
 			reg = <0x30002000 0x1000>;
 			clocks = <&mm_glb_clk CLK_MM_UART0>;
+			status = "disabled";
 		};
 
 		i2c2: i2c@30003000 {

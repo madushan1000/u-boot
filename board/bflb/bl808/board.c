@@ -36,10 +36,10 @@ void board_debug_uart_init(void)
 		writel(val, GLB_BASE + GLB_GPIO_CFG14_OFFSET);
 		writel(val, GLB_BASE + GLB_GPIO_CFG15_OFFSET);
 	} else if (IS_ENABLED(CONFIG_BL808_CPU_D0)) {
-		u32 val = (7 << GLB_REG_GPIO_0_FUNC_SEL_POS) |
+		u32 val = (21 << GLB_REG_GPIO_0_FUNC_SEL_POS) |
 			  GLB_REG_GPIO_0_IE_MSK;
 
-		/* Enable GPIO16-17 and set their function to UART. */
+		/* Enable GPIO16-17 and set their function to MM_UART. */
 		writel(val, GLB_BASE + GLB_GPIO_CFG16_OFFSET);
 		writel(val, GLB_BASE + GLB_GPIO_CFG17_OFFSET);
 	}
