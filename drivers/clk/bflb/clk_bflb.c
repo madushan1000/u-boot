@@ -250,6 +250,16 @@ static int bflb_clk_set_gate(struct clk *clk, bool enable)
 
 static int bflb_clk_enable(struct clk *clk)
 {
+	struct clk *parent;
+	int ret;
+
+	parent = bflb_clk_get_parent(clk);
+	if (clk_valid(parent)) {
+		ret = clk_enable(parent);
+		if (ret)
+			return ret;
+	}
+
 	return bflb_clk_set_gate(clk, true);
 }
 
