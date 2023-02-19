@@ -242,6 +242,7 @@ void fastboot_data_download(const void *fastboot_data,
 {
 #define BYTES_PER_DOT	0x20000
 	u32 pre_dot_num, now_dot_num;
+	void *data_buffer;
 
 	if (fastboot_data_len == 0 ||
 	    (fastboot_bytes_received + fastboot_data_len) >
@@ -250,8 +251,10 @@ void fastboot_data_download(const void *fastboot_data,
 			      response);
 		return;
 	}
-	/* Download data to fastboot_buf_addr */
-	memcpy(fastboot_buf_addr + fastboot_bytes_received,
+	/* Download data to fastboot_buf_addr or fastboot_buffer from env */
+	data_buffer = (void*)env_get_ulong("fastboot_buffer", 16, CONFIG_FASTBOOT_BUF_ADDR);
+	data_buffer = data_buffer ? data_buffer : fastboot_buf_addr;
+	memcpy(data_buffer + fastboot_bytes_received,
 	       fastboot_data, fastboot_data_len);
 
 	pre_dot_num = fastboot_bytes_received / BYTES_PER_DOT;
