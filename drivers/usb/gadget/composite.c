@@ -14,6 +14,8 @@
 #include <linux/usb/composite.h>
 #include "u_os_desc.h"
 
+
+
 #define USB_BUFSIZ	4096
 
 /* Helper type for accessing packed u16 pointers */
@@ -431,9 +433,9 @@ static int set_config(struct usb_composite_dev *cdev,
 		 * function's setup callback instead of the current
 		 * configuration's setup callback.
 		 */
-		if (gadget->speed == USB_SPEED_SUPER)
+		if (gadget->speed == USB_SPEED_SUPER && f->ss_descriptors)
 			descriptors = f->ss_descriptors;
-		else if (gadget->speed == USB_SPEED_HIGH)
+		else if (gadget->speed == USB_SPEED_HIGH && f->hs_descriptors)
 			descriptors = f->hs_descriptors;
 		else
 			descriptors = f->descriptors;

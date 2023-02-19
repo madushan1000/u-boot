@@ -168,6 +168,7 @@ static const struct bflb_clk_data bl808_glb_clks[] = {
 	},
 	[CLK_BUS_USB] = {
 		.name		= "BUS_USB",
+		.parents	= PRNTS(CLK_USBPLL),
 		.en_reg		= GLB_CGEN_CFG1_OFFSET,
 		.en_mask	= GLB_CGEN_S1_RSVD13_MSK,
 	},

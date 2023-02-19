@@ -43,3 +43,14 @@
 	pinctrl-names = "default";
 	status = "okay";
 };
+
+
+&usb {
+	compatible = "faraday,fotg210-udc";
+	status = "okay";
+	dr_mode = "peripheral";
+};
+
+&usb_phy {
+	status = "okay";
+};
