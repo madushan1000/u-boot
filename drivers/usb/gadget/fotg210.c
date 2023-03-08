@@ -619,7 +619,7 @@ static void fotg210_recv(struct fotg210_udc *udc, int ep_id)
 #else
 	len = fotg210_dma(ep, req);
 #endif //CONFIG_USB_GADGET_FOTG210_VDMA
-	if (len < ep->usb_ep.maxpacket || req->req.length <= req->req.actual) {
+	if (len <= ep->usb_ep.maxpacket || req->req.length <= req->req.actual) {
 		list_del_init(&req->queue);
 		if (req->req.complete)
 			req->req.complete(&ep->usb_ep, &req->req);
