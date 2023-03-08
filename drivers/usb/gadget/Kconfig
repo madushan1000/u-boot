@@ -134,6 +134,7 @@ config USB_GADGET_MAX3420
 
 config USB_GADGET_FOTG210
 	bool "Faraday FOTG210 USB Peripheral Controller"
+	select USB_GADGET_DUALSPEED
 	help
 	   Faraday USB2.0 OTG controller which can be configured as
 	   high speed or full speed USB device. This driver supppors
