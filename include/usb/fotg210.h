@@ -63,7 +63,7 @@ struct fotg210_regs {
 	uint32_t dma_ctrl; /* 0x1c8: DMA Control Register */
 	uint32_t dma_addr; /* 0x1cc: DMA Address Register */
 	uint32_t ep0_data; /* 0x1d0: EP0 Setup Packet PIO Register */
-#ifdef USB_GADGET_FOTG210_VDMA
+#ifdef CONFIG_USB_GADGET_FOTG210_VDMA
  	uint32_t DMA_CPS4; /*(0x1D4)*/
  	uint32_t DEV_FMAP2; /*(0x1D8)*/
  	uint32_t DEV_FCFG2; /*(0x1DC)*/

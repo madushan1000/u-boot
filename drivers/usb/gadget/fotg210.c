@@ -140,9 +140,9 @@ static int fotg210_reset(struct fotg210_udc *udc)
 	writel(GIMR0_MASK, &regs->gimr0);
 	writel(GIMR1_MASK, &regs->gimr1);
 	writel(GIMR2_MASK, &regs->gimr2);
-#ifdef USB_GADGET_FOTG210_VDMA
+#ifdef CONFIG_USB_GADGET_FOTG210_VDMA
 	writel(GIMR3_MASK, &regs->DEV_MISG3);
-#endif //#ifdef USB_GADGET_FOTG210_VDMA
+#endif //#ifdef CONFIG_USB_GADGET_FOTG210_VDMA
 
 	/* clear interrupts */
 	writel(ISR_MASK, &regs->isr);
@@ -150,9 +150,11 @@ static int fotg210_reset(struct fotg210_udc *udc)
 	writel(0, &regs->gisr0);
 	writel(0, &regs->gisr1);
 	writel(0, &regs->gisr2);
-#ifdef USB_GADGET_FOTG210_VDMA
+	/* write 1 to reset on newer versions*/
+	writel(~0, &regs->gisr2);
+#ifdef CONFIG_USB_GADGET_FOTG210_VDMA
 	writel(0, &regs->DEV_ISG3);
-#endif //#ifdef USB_GADGET_FOTG210_VDMA
+#endif //#ifdef CONFIG_USB_GADGET_FOTG210_VDMA
 
 
 	/* udc reset */
@@ -192,9 +194,9 @@ static int fotg210_reset(struct fotg210_udc *udc)
 	}
 
 	//enable vdma
-#ifdef USB_GADGET_FOTG210_VDMA
+#ifdef CONFIG_USB_GADGET_FOTG210_VDMA
 	writel(1, &regs->VDMA_CTRL);
-#endif //#ifdef USB_GADGET_FOTG210_VDMA
+#endif //#ifdef CONFIG_USB_GADGET_FOTG210_VDMA
 
 	/* enable only device interrupt and triggered at level-high */
 	writel(IMR_IRQLH | IMR_HOST | IMR_OTG, &regs->imr);
@@ -207,9 +209,9 @@ static int fotg210_reset(struct fotg210_udc *udc)
 	writel(GIMR2_WAKEUP | GIMR2_IDLE | GIMR2_DMAERR | GIMR2_DMAFIN
 		| GIMR2_ZLPRX | GIMR2_ZLPTX, &regs->gimr2);
 
-#ifdef USB_GADGET_FOTG210_VDMA
+#ifdef CONFIG_USB_GADGET_FOTG210_VDMA
 	writel(0, &regs->DEV_MISG3);
-#endif //#ifdef USB_GADGET_FOTG210_VDMA
+#endif //#ifdef CONFIG_USB_GADGET_FOTG210_VDMA
 
 	/* enable all group interrupt */
 	writel(0, &regs->gimr);
@@ -242,7 +244,7 @@ static inline int fotg210_cxwait(struct fotg210_udc *udc, uint32_t mask)
 	return ret;
 }
 
-#ifdef USB_GADGET_FOTG210_VDMA
+#ifdef CONFIG_USB_GADGET_FOTG210_VDMA
 static int fotg210_vdma(struct fotg210_ep *ep, struct fotg210_request *req)
 {
 	struct fotg210_udc *udc = ep->udc;
@@ -437,7 +439,7 @@ static int fotg210_dma(struct fotg210_ep *ep, struct fotg210_request *req)
 
 	return len;
 }
-#endif //USB_GADGET_FOTG210_VDMA
+#endif //CONFIG_USB_GADGET_FOTG210_VDMA
 
 /*
  * result of setup packet
@@ -612,11 +614,11 @@ static void fotg210_recv(struct fotg210_udc *udc, int ep_id)
 	}
 
 	req = list_first_entry(&ep->queue, struct fotg210_request, queue);
-#ifdef USB_GADGET_FOTG210_VDMA
+#ifdef CONFIG_USB_GADGET_FOTG210_VDMA
 	len = fotg210_vdma(ep, req);
 #else
 	len = fotg210_dma(ep, req);
-#endif //USB_GADGET_FOTG210_VDMA
+#endif //CONFIG_USB_GADGET_FOTG210_VDMA
 	if (len < ep->usb_ep.maxpacket || req->req.length <= req->req.actual) {
 		list_del_init(&req->queue);
 		if (req->req.complete)
@@ -746,11 +748,11 @@ static int fotg210_ep_queue(
 
 	if (ep->id == 0) {
 		do {
-#ifdef USB_GADGET_FOTG210_VDMA
+#ifdef CONFIG_USB_GADGET_FOTG210_VDMA
 			int len = fotg210_vdma(ep, req);
 #else
 			int len = fotg210_dma(ep, req);
-#endif //USB_GADGET_FOTG210_VDMA
+#endif //CONFIG_USB_GADGET_FOTG210_VDMA
 			if (len < ep->usb_ep.maxpacket)
 				break;
 			if (ep->desc->bEndpointAddress & USB_DIR_IN)
@@ -759,11 +761,11 @@ static int fotg210_ep_queue(
 	} else {
 		if (ep->desc->bEndpointAddress & USB_DIR_IN) {
 			do {
-#ifdef USB_GADGET_FOTG210_VDMA
+#ifdef CONFIG_USB_GADGET_FOTG210_VDMA
 				int len = fotg210_vdma(ep, req);
 #else
 				int len = fotg210_dma(ep, req);
-#endif //USB_GADGET_FOTG210_VDMA
+#endif //CONFIG_USB_GADGET_FOTG210_VDMA
 				if (len < ep->usb_ep.maxpacket)
 					break;
 			} while (req->req.length > req->req.actual);
