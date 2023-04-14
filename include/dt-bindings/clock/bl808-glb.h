@@ -83,7 +83,7 @@
 #define CLK_WIFIPLL_DIV30	78
 #define CLK_USBPLL		79
 #define CLK_BUS_USB		80
-#define CLK_BUS_SDH		82
+#define CLK_BUS_SDH		81
 #define CLK_BUS_EMAC		82
 
 #endif /* _DT_BINDINGS_CLOCK_BL808_GLB_H_ */

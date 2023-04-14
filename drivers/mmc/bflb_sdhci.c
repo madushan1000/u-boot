@@ -22,7 +22,7 @@ static int bflb_sdhci_probe(struct udevice *dev)
 	struct mmc_uclass_priv *upriv = dev_get_uclass_priv(dev);
 	struct bflb_sdhci_plat *plat = dev_get_plat(dev);
 	struct sdhci_host *host = dev_get_priv(dev);
-	struct clk clk;
+	struct clk clk, bus_clk;
 	int ret;
 
 	host->name = dev->name;
@@ -44,12 +44,20 @@ static int bflb_sdhci_probe(struct udevice *dev)
 		goto err_clk_disable;
 	}
 
+	ret = clk_get_by_name(dev, "bus", &bus_clk);
+	if (ret)
+		return ret;
+
+	ret = clk_enable(&bus_clk);
+	if (ret)
+		return ret;
+
 	host->mmc = &plat->mmc;
 	host->mmc->dev = dev;
 	host->mmc->priv = host;
 	upriv->mmc = &plat->mmc;
 
-	ret = sdhci_setup_cfg(&plat->cfg, host, 0, 0);
+	ret = sdhci_setup_cfg(&plat->cfg, host, host->max_clk, host->max_clk);
 	if (ret)
 		goto err_clk_disable;
 
@@ -61,6 +69,7 @@ static int bflb_sdhci_probe(struct udevice *dev)
 
 err_clk_disable:
 	clk_disable(&clk);
+	clk_disable(&bus_clk);
 
 	return ret;
 }
